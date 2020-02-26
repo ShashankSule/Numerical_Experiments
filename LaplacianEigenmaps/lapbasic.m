@@ -4,10 +4,11 @@ function [mappedX, mapping, lambda] = lapbasic(G, no_dims, sigma, eig_impl)
 %       [mappedX, mapping, lambda] = lapbasic(G, no_dims, sigma, eig_impl);
 %
 % LAPBASIC - Laplacian Basic
-%       This routine computes the Laplacian Eigenmaps given a graph G.
+%       This routine computes the Laplacian Eigenmaps given an adjacency 
+%       matrix of a graph G.
 %==========================================================================
 % Inputs: 
-%       G       - graph derived from a data matrix.
+%       G       - adjecency matrix graph derived from a data matrix.
 %       no_dims - number of dimensions.
 %       sigma, eig_impl - options.
 %
