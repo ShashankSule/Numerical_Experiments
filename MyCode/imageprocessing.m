@@ -1,4 +1,4 @@
-rgb = im2double(imread('snapshot.png'));
+rgb = im2double(imread('pikachu.png'));
 %imshow(rgb)
 [m,n,p] = size(rgb);
 freq = fft2(rgb);

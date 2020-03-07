@@ -1,8 +1,8 @@
 % Laplacian eigenmaps with digital weights 
 
 % First we provide a graph G. Enter graph here
-N = 500; % Number of vertices 
-G = gsp_spiral(N); % Creating a graph 
+N = 512; % Number of vertices 
+G = gsp_spiral(N,7); % Creating a graph 
 
 % Now compute the random walk matrix here
 t = 1; % scaling factor in diffusion map
@@ -17,36 +17,6 @@ Diff_maps = Diff_maps(:,2:end); %Dropping the first column as it's all a constan
 % to plot it, plot Diff_maps(:,j) in the jth coordinate
 
 % Plotting the jdim diffusion map
-%plot(Diff_maps(:,1),Diff_maps(:,2),'ro');
-plot3(Diff_maps(:,1),Diff_maps(:,2),Diff_maps(:,3),'ro');
+plot(Diff_maps(:,1),Diff_maps(:,2),'ro');
+%plot3(Diff_maps(:,1),Diff_maps(:,2),Diff_maps(:,3),'ro');
 
-% The neumann case 
-
-% Define the graph subset here in row or column vector form 
-
-sub = randperm(100,25);
-
-% create the corresponding subgraph
-
-S = subg(G,sub);
-
-% find boundary vertices 
-
-deltaS = boundary(G,sub); 
-
-% % graph with subgraph and boundary 
-
-AdjS = zeros(length(sub)+length(deltaS)); % Creating an adjacency matrix
-AdjS(1:length(sub), 1:length(sub)) = A(sub, sub); 
-AdjS(length(sub)+1:end,1:length(sub)) = A(deltaS, sub);
-AdjS(1:length(sub), length(sub)+1:end) = (A(deltaS, sub))' ;
-S_deltaS = graph(AdjS); 
-% colours = zeros(1,length(sub)+length(deltaS));
-% colours(1:length(sub)) = 2;
-% colours(length(sub)+1:end) = 1;
-% p = plot(S_deltaS, 'MarkerSize', 10, 'LineWidth', 2);
-% p.NodeCData = colours;
-% p.NodeLabel = [];
-% p
-
-% Creating the Neumann ma
