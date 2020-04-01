@@ -1,7 +1,7 @@
 function [G] = graph2struct(H)
 % Takes a graph type and outputs a graph struct to use for 
 % the gsp box
-A = adjacency(H);
+A = adjacency(H, 'weighted');
 N = max(size(A));
 G.N = N;
 G.W = A; 

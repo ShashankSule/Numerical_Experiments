@@ -1,0 +1,24 @@
+% Let's create a circulant matrix! 
+N = 100;
+i = 10;
+v = [0 ones(1,i) zeros(1,99-i) ones(1,i)];
+
+A = toeplitz([v(1) fliplr(v(2:end))], v);
+ 
+
+P = eye(100); 
+P = P(randperm(100),:);
+
+Adj = P*A*P';
+
+G = graph(A);
+
+H = graph2struct(G);
+
+Diff_maps = My_Eigenmaps(H);
+
+% Plotting the jdim diffusion map
+plot(Diff_maps(:,2),Diff_maps(:,3),'ro');
+%plot3(Diff_maps(:,1),Diff_maps(:,2),Diff_maps(:,3),'ro');
+
+
