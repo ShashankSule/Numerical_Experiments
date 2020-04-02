@@ -1,5 +1,5 @@
-im = imread('obama.jpg');
-im = imresize(im,[512 512]);
+im = imread('Rcirc.png');
+im = imresize(im,[32 32]);
 im = im(:,:,1);
 
 [a,h,v,d] = haart2(im,'integer');
