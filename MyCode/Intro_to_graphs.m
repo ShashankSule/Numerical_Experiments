@@ -1,4 +1,4 @@
- N = 10;
+N = 10;
 A = RandomGraph(N);
 G = graph(A);
 plot(G, 'NodeColor', 'r', 'MarkerSize', 10, 'LineWidth', 2);

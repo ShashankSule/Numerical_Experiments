@@ -3,8 +3,9 @@ function [S] = subg(G,sub)
 % Arguments:
 % 1. G is the ambient graph 
 % 2. sub is a subset of {1,...,n} that identifies the vertices 
-A = adjacency(G);
-V_S = A(sub, sub);
-S = graph(V_S);
+if ~isstruct(G)
+    G = graph2struct(G);
+end
+S = gsp_subgraph(G,sub);
 end
 

@@ -7,16 +7,15 @@ function [H,I,J, deltaS] = subs(G,sub)
 % G -- the graph
 % sub -- selection of the vertices 
 
-% First some mopping up. If G is a struct, then we convert it to a graph
-% object. If it isn't then we keep it. 
+% First some mopping up. If G isn't a struct, we convert it to a struct
+% object. If it is then we keep it. 
 
-if isstruct(G)
-    W = G.W;
-    G = graph(W);
+if ~isstruct(G)
+    G = graph2struct(G);
 end
-% A stores the adjacency matrix
+% A stores the adjacency (or weight) matrix
 
-A = adjacency(G);
+A = G.W;
 
 % find boundary vertices 
 
@@ -24,22 +23,28 @@ deltaS = boundary(G,sub);
 
 % find induced subgraph 
 
-H = subg(G,sub);
+H = gsp_subgraph(G,sub);
 
 % graph with subgraph and boundary 
 
-AdjS = zeros(length(sub)+length(deltaS)); % Creating an adjacency matrix
-AdjS(1:length(sub), 1:length(sub)) = A(sub, sub); 
-AdjS(length(sub)+1:end,1:length(sub)) = A(deltaS, sub);
-AdjS(1:length(sub), length(sub)+1:end) = (A(deltaS, sub))' ;
-I = graph(AdjS);
+% AdjS = zeros(length(sub)+length(deltaS)); % Creating an adjacency matrix
+% AdjS(1:length(sub), 1:length(sub)) = A(sub,sub); 
+% AdjS(length(sub)+1:end,1:length(sub)) = A(deltaS, sub);
+% AdjS(1:length(sub), length(sub)+1:end) = (A(deltaS, sub))' ;
+% I = graph(AdjS);
+% I = graph2struct(I);
+
+I = gsp_subgraph(G,[sub';deltaS]);
+I.W(end-length(deltaS)+1:end,end-length(deltaS)+1:end) = zeros(length(deltaS));
 
 % % graph induced by subgraph union boundary 
 
-AdjS_deltaS = A([sub reshape(deltaS, [1,length(deltaS)])], [sub reshape(deltaS, [1,length(deltaS)])]);
-% Creating reordered adjacency with subgraph vertices first
-J = graph(AdjS_deltaS);
+J = subg(G,[sub';deltaS]);
 
+% AdjS_deltaS = A([sub reshape(deltaS, [1,length(deltaS)])], [sub reshape(deltaS, [1,length(deltaS)])]);
+% % Creating reordered adjacency with subgraph vertices first
+% J = graph(AdjS_deltaS);
+% J = graph2struct(J);
 
 end
 

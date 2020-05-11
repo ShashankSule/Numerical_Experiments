@@ -54,48 +54,48 @@
 % plot3(Diff_maps(:,2),Diff_maps(:,3),Diff_maps(:,1),'bo-');
 % title('Diffusion Embedding of the torus as a pointcloud');
 
-% Extracting the image 
-Iz = imread('Rcirc.png');
-im = imresize(Iz,[32 32]);
-im = im(:,:,1);
-H = im2graph(im2double(im));
-t = [0 0.25 0.5 0.75 1];
-for i=t
-    Diff_maps = My_Eigenmaps(H,i);
-    scale = num2str(i);
-    labelstring = strcat('t=',scale);
-    scatter3(Diff_maps(:,1),Diff_maps(:,2),Diff_maps(:,3),'DisplayName',labelstring);
-    hold on;
-end
+ % Extracting the image 
+ Iz = imread('Rcirc.png');
+ im = imresize(Iz,[32 32]);
+ im = im(:,:,1);
+ H = im2graph(im2double(im));
+ % t = [0 0.25 0.5 0.75 1];
+ % for i=t
+ %     Diff_maps = My_Eigenmaps(H,i,5);
+ %     scale = num2str(i);
+ %     labelstring = strcat('t=',scale);
+ %     scatter3(Diff_maps(:,1),Diff_maps(:,2),Diff_maps(:,3),'DisplayName',labelstring);
+ %     hold on;
+ % end
+ % 
+ % legend;
+ % 
+ % scatter(Diff_maps(:,1),Diff_maps(:,2),pointsize,Diff_maps(:,3))
+ % pointsize = 20; colorbar jet;
+ % scatter(Diff_maps(:,1),Diff_maps(:,2),pointsize,Diff_maps(:,3)); colormap jet;
+ Diff_maps = My_Eigenmaps(H,1,5);
+ figure;
+ subplot(2,2,1);
+ imagesc(Iz(:,:,1));
+ title('Original Image','interpreter','latex','FontSize',20);
+ set(gca,'xtick',[]);
+ set(gca,'ytick',[]); 
 
-legend;
+subplot(2,2,2);
+imagesc(im);
+title('Pixellated Image', 'interpreter','latex','FontSize',20);
+set(gca,'xtick',[]);
+set(gca,'ytick',[]);
 
-%scatter(Diff_maps(:,1),Diff_maps(:,2),pointsize,Diff_maps(:,3))
-%pointsize = 20; colorbar jet;
-%scatter(Diff_maps(:,1),Diff_maps(:,2),pointsize,Diff_maps(:,3)); colormap jet;
+subplot(2,2,3);
+scatter3(Diff_maps(:,1),Diff_maps(:,2),Diff_maps(:,3));
+title('3-D Diffusion Embedding','interpreter','latex','FontSize',20);
+set(gca,'xtick',[]);
+set(gca,'ytick',[]);
 
-% figure;
-% subplot(2,2,1);
-% imagesc(Iz(:,:,1));
-% title('Original Image','interpreter','latex','FontSize',16);
-% set(gca,'xtick',[]);
-% set(gca,'ytick',[]);
-% 
-% subplot(2,2,2);
-% imagesc(im);
-% title('Pixellated Image', 'interpreter','latex','FontSize',16);
-% set(gca,'xtick',[]);
-% set(gca,'ytick',[]);
-% 
-% subplot(2,2,3);
-% scatter3(Diff_maps(:,1),Diff_maps(:,2),Diff_maps(:,3));
-% title('3-D Diffusion Embedding','interpreter','latex','FontSize',16);
-% set(gca,'xtick',[]);
-% set(gca,'ytick',[]);
-% 
-% subplot(2,2,4);
-% pointsize = 20; 
-% scatter(Diff_maps(:,1),Diff_maps(:,2),pointsize,Diff_maps(:,3)); colormap jet;
-% title('Recreated Image','interpreter','latex','FontSize',16);
-% set(gca,'xtick',[]);
-% set(gca,'ytick',[]);
+subplot(2,2,4);
+pointsize = 20; 
+scatter(Diff_maps(:,1),Diff_maps(:,2),pointsize,Diff_maps(:,3)); colormap jet;
+title('Recreated Image','interpreter','latex','FontSize',20);
+set(gca,'xtick',[]);
+set(gca,'ytick',[]);

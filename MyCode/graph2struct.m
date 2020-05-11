@@ -9,5 +9,4 @@ G.W = A;
 G.coords=[(cos((0:N-1)*(2*pi)/N))',(sin((0:N-1)*(2*pi)/N))'];
 G.plotting.limits=[-1,1,-1,1];
 G = gsp_graph_default_parameters(G);
-end 
 

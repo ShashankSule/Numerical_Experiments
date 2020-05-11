@@ -1,6 +1,7 @@
-im = imread('Rcirc.png');
-im = imresize(im,[32 32]);
-im = im(:,:,1);
+load mandrill
+%im = imread('Rcirc.png');
+im = imresize(X,[512 512]);
+%im = im(:,:,1);
 
 [a,h,v,d] = haart2(im,'integer');
 figure;
@@ -12,7 +13,7 @@ for i=0:8
     imrec = ihaart2(a,h,v,d,i,'integer');
     colormap parula
     imagesc(imrec);
-    title(strcat('Level', " ", num2str(8-i + 1)));
+    title(strcat('Level', " ", num2str(8-i + 1)), 'interpreter', 'latex','FontSize',20);
     axis off;
 end
 
