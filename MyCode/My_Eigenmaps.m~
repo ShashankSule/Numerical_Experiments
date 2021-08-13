@@ -1,5 +1,5 @@
-function [Diff_Maps, Lambda] = My_Eigenmaps(X, autotune, dim, alpha, epsilon,delta, ...
-    t)
+function [Diff_Maps, Lambda] = My_Eigenmaps(X, epsilon, autotune, delta, ...
+    %dim, t, alpha)
 %Inputs
 %X--data matrix (each row is a data point)
 %epsilon--affinity parameter
@@ -16,11 +16,6 @@ function [Diff_Maps, Lambda] = My_Eigenmaps(X, autotune, dim, alpha, epsilon,del
 % 
 % X = G.coords;
 % 
-
-if autotune
-    delta = 0.01;
-end
-
 % autotune = true;
 % delta = 0.01;
 % alpha = 0.0; 
@@ -76,7 +71,7 @@ options.issym = 1;
 Afun = @(x) S*x;
 S = sparse(S); 
 
-[V, Lambda] = eigs(Afun, n, dim+1, 'lm', options); 
+[V, Lambda] = eigs(S, dim+1, 'lm', options); 
 
 % [V,Lambda] = eigs(Afun, N, N, 'largestabs', ...
 %                  'Tolerance', 1e-6,'IsFunctionSymmetric', true); 
@@ -100,7 +95,7 @@ if autotune
     t = ceil(log(delta)/(log(lambdas(end)) - log(lambdas(1))));
 end
 
-%t = 1;
+t = 1;
 % Set the eigenvalue tuning
 Lambda_talpha = Lambda^(t-t*alpha);
 
@@ -111,5 +106,5 @@ Diff_Maps = (Psi./ repmat(sqrt(sum(Psi.^2)),size(Psi,1),1))*Lambda_talpha;
 
 % Note here that the rows of Diff_maps are the points and columns the 
 % spectrum. So we'll return the last dim columns 
-
+return Diff_Maps(:,2:end) Lambda
 end
