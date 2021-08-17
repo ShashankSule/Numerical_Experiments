@@ -25,8 +25,6 @@ deltaS = boundary(G,sub);
 
 H = gsp_subgraph(G,sub);
 
-% graph with subgraph and boundary 
-
 % AdjS = zeros(length(sub)+length(deltaS)); % Creating an adjacency matrix
 % AdjS(1:length(sub), 1:length(sub)) = A(sub,sub); 
 % AdjS(length(sub)+1:end,1:length(sub)) = A(deltaS, sub);
@@ -36,6 +34,7 @@ H = gsp_subgraph(G,sub);
 
 I = gsp_subgraph(G,[sub';deltaS]);
 I.W(end-length(deltaS)+1:end,end-length(deltaS)+1:end) = zeros(length(deltaS));
+I = graph2struct(graph(I.W));
 
 % % graph induced by subgraph union boundary 
 

@@ -1,4 +1,4 @@
-function [Diff_Maps, Lambda] = My_Eigenmaps(X, autotune, dim, alpha, epsilon,delta, ...
+function [Diff_Maps, Lambda, S, t, spectra] = My_Eigenmaps(X, autotune, dim, alpha, epsilon,delta, ...
     t)
 %Inputs
 %X--data matrix (each row is a data point)
@@ -111,5 +111,5 @@ Diff_Maps = (Psi./ repmat(sqrt(sum(Psi.^2)),size(Psi,1),1))*Lambda_talpha;
 
 % Note here that the rows of Diff_maps are the points and columns the 
 % spectrum. So we'll return the last dim columns 
-
+spectra = eigs(S, size(S,1));
 end

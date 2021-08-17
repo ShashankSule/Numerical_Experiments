@@ -1,11 +1,15 @@
-function [Diff_Maps, Lambda] = My_Eigenmaps(X, epsilon, autotune, delta, ...
-    %dim, t, alpha)
-%Inputs
-%X--data matrix (each row is a data point)
-%epsilon--affinity parameter
-%dim--desired dimension embedding
-%t--scale parameter
-%α--distribution tuning
+function [NDmaps, Lambda, S, t, spectra] = Neumann_diffusion_maps(X, sub, autotune, dim, ...
+   alpha, epsilon, delta, t)
+
+% Compute neumann diffusions. Inputs: 
+% X -- N x D data matrix 
+% sub -- subset of data to be embedded
+% autotune -- usually true
+% dim -- dimension of the embedding
+% alpha -- diffusion parameter 
+% epsilon -- affinity tuning 
+% delta -- scaling accuracy
+% t -- scale 
 
 % Sample test 
 
@@ -15,11 +19,15 @@ function [Diff_Maps, Lambda] = My_Eigenmaps(X, epsilon, autotune, delta, ...
 % G = gsp_sphere(N,param); % Creating a graph in struct version 
 % 
 % X = G.coords;
-% 
+% sub = 1:N/2; 
 % autotune = true;
-% delta = 0.01;
+% % delta = 0.01;
 % alpha = 0.0; 
 % dim = 3; 
+% 
+if autotune
+    delta = 0.01;
+end
 %% First set up the affinity matrix from the data
 
 n = size(X,1);
@@ -55,14 +63,13 @@ q = K*ones(n,1);
 Q = diag(q); 
 K_alph = (Q^(-alpha))*K*(Q^(-alpha));
 
-%% Computing the Spectrum: Set up the matrices
+%% Computing the Spectrum: Set up the matrices 
 %K_alph = K_alph - diag(diag(K_alph)); 
-d_alph = K_alph*ones(n,1); 
-%D_alph = sum(d_alph); 
-Ppi = diag(d_alph); % The renormalization matrix 
-S = (Ppi^(-1/2))*K_alph*(Ppi^(-1/2)); % The I - L matrix 
-S = (S + S')/2;
-
+H = graph(K_alph); % switch to the graph 
+[N,~, ~, ~, Ppi,~] = Neumann_Dirichlet(H,sub); % extract neumann matrix
+n = length(sub);
+S = eye(n) - (Ppi^(-1/2))*N*(Ppi^(-1/2)); % Form random walk matrix
+S = 0.5 * (S + S');
 %% Computing the spectrum: Finally execute the algorithm
 param.tol = 1e-6;
 options.disp = 0;
@@ -71,7 +78,7 @@ options.issym = 1;
 Afun = @(x) S*x;
 S = sparse(S); 
 
-[V, Lambda] = eigs(S, dim+1, 'lm', options); 
+[V, Lambda] = eigs(Afun, n, dim+1, 'lm', options); 
 
 % [V,Lambda] = eigs(Afun, N, N, 'largestabs', ...
 %                  'Tolerance', 1e-6,'IsFunctionSymmetric', true); 
@@ -95,16 +102,16 @@ if autotune
     t = ceil(log(delta)/(log(lambdas(end)) - log(lambdas(1))));
 end
 
-t = 1;
+%t = 1;
 % Set the eigenvalue tuning
 Lambda_talpha = Lambda^(t-t*alpha);
 
 % Compute the diff map
 
 % Normalizing twice! 
-Diff_Maps = (Psi./ repmat(sqrt(sum(Psi.^2)),size(Psi,1),1))*Lambda_talpha;
+NDmaps = (Psi./ repmat(sqrt(sum(Psi.^2)),size(Psi,1),1))*Lambda_talpha;
 
 % Note here that the rows of Diff_maps are the points and columns the 
 % spectrum. So we'll return the last dim columns 
-return Diff_Maps(:,2:end) Lambda
+spectra = eigs(S, size(S,1));
 end

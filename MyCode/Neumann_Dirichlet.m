@@ -8,14 +8,16 @@ if ~isstruct(G)
     G = graph2struct(G);
 end
 
-[~, S_deltaS, S_UdeltaS, ~] = subs(G,sub);
+[~, ~, S_UdeltaS, ~] = subs(G,sub);
 L = S_UdeltaS.L; % note that L is stored as sparse double
 D = L(1:length(sub), 1:length(sub)); % the dirichlet matrix 
 B = -L(length(sub)+1:end,1:length(sub)); %the boundary map
-l = S_deltaS.L;
-deltaT_S = l(length(sub)+1:end, length(sub)+1:end);
+%l = S_deltaS.L;
+v = B*ones(length(sub),1);
+deltaT_S = diag(v); 
+%deltaT_S = l(length(sub)+1:end, length(sub)+1:end);
 N = sparse(D - (B')*(diag(1./diag(deltaT_S)))*B);
-diagonal = diag(l);
+diagonal = diag(L);
 T_S = diag(diagonal(1:length(sub)));
 N_mat = vertcat(sparse(eye(length(sub))), sparse((diag(1./diag(deltaT_S)))*B));
 
