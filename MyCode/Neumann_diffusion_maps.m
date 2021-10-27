@@ -62,7 +62,7 @@ K = exp(-Del / (2*epsilon));
 q = K*ones(n,1); 
 Q = diag(q); 
 K_alph = (Q^(-alpha))*K*(Q^(-alpha));
-
+K_alph = 0.5 * (K_alph * K_alph'); 
 %% Computing the Spectrum: Set up the matrices 
 %K_alph = K_alph - diag(diag(K_alph)); 
 H = graph(K_alph); % switch to the graph 
@@ -86,8 +86,8 @@ S = sparse(S);
                            % eigenvectors
 % [V, Lambda] = eig(S);       
 [~,ind] = sort(diag(Lambda), 'descend'); % Sort the eigenvectors in ascending 
-Lambda = Lambda(ind(1:dim+1), ind(1:dim+1));     % order 
-V = V(:,ind(1:dim+1));
+Lambda = Lambda(ind(2:dim+1), ind(2:dim+1));     % order 
+V = V(:,ind(2:dim+1));
 
 %% Computing the diffusion map 
 
@@ -109,8 +109,8 @@ Lambda_talpha = Lambda^(t-t*alpha);
 % Compute the diff map
 
 % Normalizing twice! 
-NDmaps = (Psi./ repmat(sqrt(sum(Psi.^2)),size(Psi,1),1))*Lambda_talpha;
-
+%NDmaps = (Psi./ repmat(sqrt(sum(Psi.^2)),size(Psi,1),1))*Lambda_talpha;
+NDmaps = Psi*Lambda_talpha
 % Note here that the rows of Diff_maps are the points and columns the 
 % spectrum. So we'll return the last dim columns 
 spectra = eigs(S, size(S,1));
